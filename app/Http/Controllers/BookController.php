@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Book;
+use App\Models\Faktur;
+use Cart;
 
 class BookController extends Controller
 {
@@ -24,7 +26,12 @@ class BookController extends Controller
         $category = Category::all();
         return view('dashboard', compact('book','category'));
     }
-
+    
+    public function showFaktur(){
+        $book = Book::all();
+        $category = Category::all();
+        return view('chooseFaktur', compact('book','category'));
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -60,6 +67,26 @@ class BookController extends Controller
 
         return redirect('/');
     }
+    public function storeFaktur(Request $request)
+    {
+        $validate = $request->validate([
+            'Address' => 'required|string|min:10|max:100',
+            'Postcode' => 'required|integer|min:9999'
+        ]);
+
+        Faktur::create([
+            'FakturID' => $request -> FakturID,
+            'Category' => $request -> Category,
+            'Name' => $request -> Name,
+            'Qty' => $request -> Qty,
+            'Address' => $request -> Address,
+            'Postcode' => $request -> Postcode,
+            'Total' => $request -> Total,
+            'Subtotal' => $request -> Subtotal,
+        ]);
+
+        return redirect('/');
+    }
 
     /**
      * Display the specified resource.
@@ -72,7 +99,7 @@ class BookController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Update the specified resource in storage.
      */
     public function edit(string $id, Request $request)
     {
@@ -102,9 +129,32 @@ class BookController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function add_to_cart(Request $request, string $id)
     {
-        //
+        $book = Book::findOrFail($id);
+        Cart::add($book->id, $book->Name,1, $book->Price);
+        return redirect('/createFaktur');
+    }
+
+    public function show_cart(){
+        $cart1 = Cart::content();
+        $book = Book::all();
+        $category = Category::all();
+        return view('cart', compact('cart1', 'book', 'category'));
+    }
+
+    public function add_qty($rowId){
+        $cart = Cart::get($rowId);
+        Cart::update($rowId, $cart->qty+1);
+
+        return redirect('/cart');
+    }
+
+    public function min_qty($rowId){
+        $cart = Cart::get($rowId);
+        Cart::update($rowId, $cart->qty-1);
+
+        return redirect('/cart');
     }
 
     /**
