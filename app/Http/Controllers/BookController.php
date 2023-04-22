@@ -74,16 +74,28 @@ class BookController extends Controller
             'Postcode' => 'required|integer|min:9999'
         ]);
 
-        Faktur::create([
-            'FakturID' => $request -> FakturID,
-            'Category' => $request -> Category,
-            'Name' => $request -> Name,
-            'Qty' => $request -> Qty,
-            'Address' => $request -> Address,
-            'Postcode' => $request -> Postcode,
-            'Total' => $request -> Total,
-            'Subtotal' => $request -> Subtotal,
-        ]);
+        foreach (Cart::content() as $item ) {
+            foreach (Book::all() as $b) {
+                if ($item->name == $b->Name) {
+                    foreach (Category::all() as $c ) {
+                        if($b->category_id == $c->id){
+                            Faktur::create([
+                                'FakturID' => $request -> FakturID,
+                                'Category' => $c -> CategoryName,
+                                'Name' => $item -> name,
+                                'Qty' => $item -> qty,
+                                'Address' => $request -> Address,
+                                'Postcode' => $request -> Postcode,
+                                'Total' => $item->price*$item->qty,
+                                'Subtotal' => $request -> Subtotal,
+                            ]);
+                        };
+                    };
+                };
+            };
+        };
+
+
 
         return redirect('/');
     }

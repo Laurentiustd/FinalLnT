@@ -37,7 +37,8 @@
             @csrf
             <h1 style="padding: 1em" name="FakturID">No Faktur :
                 {{ $invoiceid = chr(rand(65, 90)) . chr(rand(65, 90)) . rand(2, 10) . rand(2, 10) . rand(2, 10) }}</h1>
-            <div style="display:grid; grid-template-columns: repeat(3, 1fr); padding: 2em">
+            <input type="hidden" name="FakturID" value="{{$invoiceid}}">
+                <div style="display:grid; grid-template-columns: repeat(3, 1fr); padding: 2em">
                 @foreach ($cart1 as $item)
                     <div class="card" style="width: 18rem;">
                         @foreach ($book as $b)
@@ -48,19 +49,23 @@
                                     @foreach ($category as $c)
                                         @if ($b->category_id == $c->id)
                                             <h5 class="card-title" name="Category">Category : {{ $c->CategoryName }}</h5>
-                                        @endif
+                                            <input type="hidden" name="Category" value="{{$c->CategoryName}}">
+                                            @endif
                                     @endforeach
                             @endif
                         @endforeach
                         <h5 class="card-title" name="Name">Name : {{ $item->name }}</h5>
+                        <input type="hidden" value="{{ $item->name }}" name="Name">
                         <p class="card-text">Price : Rp.{{ $item->price }}</p>
                         <p class="card-text" name="Qty">Quantity :
                             <a href="/minQty/{{ $item->rowId }}" class="btn">-</a>
                             {{ $item->qty }}
                             <a href="/addQty/{{ $item->rowId }}" class="btn">+</a>
                         </p>
+                        <input type="hidden" value="{{ $item->qty }}" name="Qty">
                         <?php $total = $item->qty * $item->price; ?>
                         <p class="card-text" name="Total">Total : {{ $total }}</p>
+                        <input type="hidden" name="Total" value="{{ $total }}">
                     </div>
                     <?php $subtotal += $total; ?>
             </div>
@@ -81,6 +86,7 @@
         @enderror
     </div>
     <h1 style="padding: 1em" name="Subtotal">Sub Total : Rp.{{ $subtotal }}</h1>
+    <input type="hidden" name="Subtotal" value="{{ $subtotal }}">
     <button type="submit" class="btn btn-primary">Save Faktur</button>
     </form>
     @endif
