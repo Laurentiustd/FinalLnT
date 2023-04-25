@@ -89,6 +89,9 @@ class BookController extends Controller
                                 'Total' => $item->price*$item->qty,
                                 'Subtotal' => $request -> Subtotal,
                             ]);
+                            Book::findOrFail($b->id)->update([
+                                'Quantity' => $b->Quantity-$item->qty
+                            ]);
                         };
                     };
                 };
