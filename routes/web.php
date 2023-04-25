@@ -37,13 +37,15 @@ Route::middleware('isAdmin')->group(function(){
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
 Route::get('/dashboard', [BookController::class, 'showDashboard'])->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
 Route::get('/createFaktur', [BookController::class, 'showFaktur']);
 Route::get('/selectFaktur/{id}', [BookController::class, 'add_to_cart']);
 Route::get('/cart', [BookController::class, 'show_cart']);
 Route::get('/addQty/{rowId}', [BookController::class, 'add_qty']);
 Route::get('/minQty/{rowId}', [BookController::class, 'min_qty']);
 Route::post('/storeFaktur', [BookController::class, 'storeFaktur']);
-
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

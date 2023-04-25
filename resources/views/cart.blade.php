@@ -16,6 +16,9 @@
                         <a class="nav-link" href="/">Home</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="/createCategory">Create Category</a>
                     </li>
                     <li class="nav-item">
@@ -23,6 +26,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/createFaktur">Create Faktur</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cart">Cart</a>
                     </li>
                 </ul>
             </div>
@@ -87,7 +93,21 @@
     </div>
     <h1 style="padding: 1em" name="Subtotal">Sub Total : Rp.{{ $subtotal }}</h1>
     <input type="hidden" name="Subtotal" value="{{ $subtotal }}">
-    <button type="submit" class="btn btn-primary">Save Faktur</button>
+    <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Save Faktur</button>
     </form>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">SUCCESS</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h1>Faktur has been saved successfully to database!</h1>
+        </div>
+      </div>
+    </div>
+  </div>
     @endif
 @endsection
